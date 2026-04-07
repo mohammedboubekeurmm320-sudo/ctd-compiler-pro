@@ -13,13 +13,14 @@ export function useProject(projectId: string | undefined) {
   const { currentProject, setCurrentProject, updateProject, loading, setLoading, error, setError } = useProjectStore()
 
   const fetch = useCallback(async (id: string) => {
+    if (!tenantId) return
     setLoading(true)
     setError(null)
     const { data, error: err } = await supabase
       .from('projects')
       .select('*')
       .eq('id', id)
-      .eq('tenant_id', tenantId ?? '')
+      .eq('tenant_id', tenantId)
       .single()
 
     if (err) {

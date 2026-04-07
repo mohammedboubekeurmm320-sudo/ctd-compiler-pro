@@ -13,12 +13,13 @@ export function useConflicts(projectId: string | undefined) {
   const [loading, setLoading] = useState(false)
 
   const fetch = useCallback(async (id: string) => {
+    if (!tenantId) return
     setLoading(true)
     const { data } = await supabase
       .from('conflicts')
       .select('*')
       .eq('project_id', id)
-      .eq('tenant_id', tenantId ?? '')
+      .eq('tenant_id', tenantId)
       .eq('resolved', false)
       .order('created_at', { ascending: false })
     setConflicts((data ?? []) as Conflict[])

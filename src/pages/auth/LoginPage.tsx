@@ -1,5 +1,4 @@
 // ============================================================
-// ============================================================
 // M23 — Page Login (VERSION DÉBOGAGE)
 // ============================================================
 
@@ -21,36 +20,26 @@ export function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('🔥 1. Formulaire soumis')
+    
     setError('')
     setLoading(true)
-    
-    // 🔍 DÉBOGAGE - Vérifier les valeurs avant envoi
-    console.log('=== DÉBOGAGE CONNEXION ===')
-    console.log('Email brut:', JSON.stringify(email))
-    console.log('Password présent:', password ? 'OUI (masqué)' : 'NON')
-    console.log('Email length:', email.length)
-    console.log('Password length:', password.length)
-    
-    // Vérification explicite
-    if (!email || !password) {
-      setError('Email ou mot de passe manquant')
-      setLoading(false)
-      return
-    }
-    
-    // Nettoyage
-    const cleanEmail = email.trim().toLowerCase()
-    const cleanPassword = password
-    
-    console.log('Email nettoyé:', JSON.stringify(cleanEmail))
-    
+    console.log('🔥 2. Loading activé')
+
     try {
-      await signIn(cleanEmail, cleanPassword)
+      console.log('🔥 3. Avant signIn - email:', email)
+      await signIn(email, password)
+      console.log('🔥 4. signIn réussi !')
+      
+      console.log('🔥 5. Avant navigation vers:', from)
       navigate(from, { replace: true })
+      console.log('🔥 6. Navigation appelée')
+      
     } catch (err) {
-      console.error('Erreur complète:', err)
+      console.error('🔥 ERREUR attrapée:', err)
       setError(err instanceof Error ? err.message : 'Erreur de connexion')
     } finally {
+      console.log('🔥 7. Finally - loading désactivé')
       setLoading(false)
     }
   }
@@ -58,7 +47,6 @@ export function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-6">
-        {/* Logo */}
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-primary-600 rounded-xl mb-4">
             <span className="text-white font-bold text-lg">C</span>
@@ -97,8 +85,8 @@ export function LoginPage() {
               </Link>
             </div>
 
-            <Button type="submit" className="w-full" size="lg" loading={loading}>
-              Se connecter
+            <Button type="submit" className="w-full" size="lg" disabled={loading}>
+              {loading ? 'Connexion...' : 'Se connecter'}
             </Button>
           </form>
         </Card>

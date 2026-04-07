@@ -15,12 +15,13 @@ export function useFormEntries(projectId: string | undefined) {
   const autosaveTimer = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const fetch = useCallback(async (id: string) => {
+    if (!tenantId) return
     setLoading(true)
     const { data } = await supabase
       .from('ctd_form_entries')
       .select('*')
       .eq('project_id', id)
-      .eq('tenant_id', tenantId ?? '')
+      .eq('tenant_id', tenantId)
       .order('ctd_section')
     setEntries((data ?? []) as CTDFormEntry[])
     setLoading(false)

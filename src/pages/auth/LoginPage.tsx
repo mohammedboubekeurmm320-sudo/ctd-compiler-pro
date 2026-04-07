@@ -1,5 +1,6 @@
 // ============================================================
-// M23 — Page Login
+// ============================================================
+// M23 — Page Login (VERSION DÉBOGAGE)
 // ============================================================
 
 import { useState } from 'react'
@@ -22,10 +23,32 @@ export function LoginPage() {
     e.preventDefault()
     setError('')
     setLoading(true)
+    
+    // 🔍 DÉBOGAGE - Vérifier les valeurs avant envoi
+    console.log('=== DÉBOGAGE CONNEXION ===')
+    console.log('Email brut:', JSON.stringify(email))
+    console.log('Password présent:', password ? 'OUI (masqué)' : 'NON')
+    console.log('Email length:', email.length)
+    console.log('Password length:', password.length)
+    
+    // Vérification explicite
+    if (!email || !password) {
+      setError('Email ou mot de passe manquant')
+      setLoading(false)
+      return
+    }
+    
+    // Nettoyage
+    const cleanEmail = email.trim().toLowerCase()
+    const cleanPassword = password
+    
+    console.log('Email nettoyé:', JSON.stringify(cleanEmail))
+    
     try {
-      await signIn(email, password)
+      await signIn(cleanEmail, cleanPassword)
       navigate(from, { replace: true })
     } catch (err) {
+      console.error('Erreur complète:', err)
       setError(err instanceof Error ? err.message : 'Erreur de connexion')
     } finally {
       setLoading(false)

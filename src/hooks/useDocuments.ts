@@ -13,12 +13,13 @@ export function useDocuments(projectId: string | undefined) {
   const { documents, setDocuments, addDocument, updateDocument, loading, setLoading } = useDocumentStore()
 
   const fetch = useCallback(async (id: string) => {
+    if (!tenantId) return
     setLoading(true)
     const { data } = await supabase
       .from('documents')
       .select('*')
       .eq('project_id', id)
-      .eq('tenant_id', tenantId ?? '')
+      .eq('tenant_id', tenantId)
       .order('uploaded_at', { ascending: false })
     setDocuments((data ?? []) as Document[])
     setLoading(false)
